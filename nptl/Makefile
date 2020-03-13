@@ -353,6 +353,7 @@ tests = \
   tst-thread-exit-clobber \
   tst-thread-setspecific \
   tst-thread_local1 \
+  tst-eintr1 \
   tst-tsd3 \
   tst-tsd4 \
   # tests
@@ -396,10 +397,6 @@ xtests = \
 tests-time64 := \
   tst-cancel4_2-time64
   # tests-time64
-
-# This test can run into task limits because of a linux kernel bug
-# and then cause the make process to fail too, see bug 24537.
-xtests += tst-eintr1
 
 test-srcs = tst-oddstacklimit
 
