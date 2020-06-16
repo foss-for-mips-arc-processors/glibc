@@ -113,6 +113,9 @@
 /* AArch64 big endian ABI */
 #undef HAVE_AARCH64_BE
 
+/* ARC64 ABI */
+#undef HAVE_ARC64
+
 /* C-SKY ABI version.  */
 #undef CSKYABI
 

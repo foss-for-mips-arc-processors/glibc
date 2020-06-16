@@ -19,7 +19,23 @@
 #ifndef _ARC_BITS_ATOMIC_H
 #define _ARC_BITS_ATOMIC_H 1
 
-#define __HAVE_64B_ATOMICS 0
+#include <stdint.h>
+
+typedef int32_t atomic32_t;
+typedef uint32_t uatomic32_t;
+typedef int64_t atomic64_t;
+typedef uint64_t uatomic64_t;
+
+typedef intptr_t atomicptr_t;
+typedef uintptr_t uatomicptr_t;
+typedef intmax_t atomic_max_t;
+typedef uintmax_t uatomic_max_t;
+
+# if defined(__ARC64__)
+#  define __HAVE_64B_ATOMICS 1
+# else
+#  define __HAVE_64B_ATOMICS 0
+# endif
 #define USE_ATOMIC_COMPILER_BUILTINS 1
 
 /* ARC does have legacy atomic EX reg, [mem] instruction but the micro-arch
@@ -30,14 +46,15 @@
   (abort (), 0)
 #define __arch_compare_and_exchange_bool_16_acq(mem, newval, oldval)	\
   (abort (), 0)
-#define __arch_compare_and_exchange_bool_64_acq(mem, newval, oldval)	\
-  (abort (), 0)
+
+# if !defined(__ARC64__)
+#  define __arch_compare_and_exchange_bool_64_acq(mem, newval, oldval)	\
+    (abort (), 0)
+#endif
 
 #define __arch_compare_and_exchange_val_8_int(mem, newval, oldval, model)	\
   (abort (), (__typeof (*mem)) 0)
 #define __arch_compare_and_exchange_val_16_int(mem, newval, oldval, model)	\
-  (abort (), (__typeof (*mem)) 0)
-#define __arch_compare_and_exchange_val_64_int(mem, newval, oldval, model)	\
   (abort (), (__typeof (*mem)) 0)
 
 #define __arch_compare_and_exchange_val_32_int(mem, newval, oldval, model)	\
@@ -47,6 +64,20 @@
                                  model, __ATOMIC_RELAXED);              	\
     __oldval;                                                           	\
   })
+
+# if defined(__ARC64__)
+# define __arch_compare_and_exchange_val_64_int(mem, newval, oldval, model)	\
+  ({										\
+    typeof (*mem) __oldval = (oldval);                                  	\
+    __atomic_compare_exchange_n (mem, (void *) &__oldval, newval, 0,    	\
+                                 model, __ATOMIC_RELAXED);              	\
+    __oldval;                                                           	\
+  })
+# else
+/* ARCv2 has LOCKD/SCOND but not sure if gcc atomic builtins exist.  */
+#  define __arch_compare_and_exchange_val_64_int(mem, newval, oldval, model)	\
+    (abort (), (__typeof (*mem)) 0)
+#endif
 
 #define atomic_compare_and_exchange_val_acq(mem, new, old)		\
   __atomic_val_bysize (__arch_compare_and_exchange_val, int,		\
