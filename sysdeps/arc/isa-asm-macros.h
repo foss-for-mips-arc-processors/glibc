@@ -18,10 +18,18 @@
 
 #ifdef	__ASSEMBLER__
 
+# ifdef __ARC64__
+# include <sysdeps/arc/isa-asm-macro-64.h>
+# else
 # include <sysdeps/arc/isa-asm-macro-32.h>
+# endif
 
 #else
 
+# ifdef __ARC64__
+asm(".include \"sysdeps/arc/isa-asm-macro-64.h\"\n");
+# else
 asm(".include \"sysdeps/arc/isa-asm-macro-32.h\"\n");
+# endif
 
 #endif
