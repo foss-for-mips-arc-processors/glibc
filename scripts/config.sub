@@ -1170,6 +1170,10 @@ case $cpu-$vendor in
 		cpu=mipsallegrexel
 		vendor=sony
 		;;
+	arc64*-*)
+		cpu=arc64
+		vendor=linux
+		;;
 	tile*-*)
 		basic_os=${basic_os:-linux-gnu}
 		;;

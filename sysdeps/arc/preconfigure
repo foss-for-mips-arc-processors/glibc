@@ -1,14 +1,22 @@
 case "$machine" in
 arc*)
-  base_machine=arc
-  machine=arc
+  with_fp_cond=0
+  isarc64=`$CC $CFLAGS $CPPFLAGS -E -dM -xc /dev/null | grep __LP64__| wc -l`
 
-  gccfloat=`$CC $CFLAGS $CPPFLAGS -E -dM -xc /dev/null | grep __ARC_FPU_| wc -l`
-  if test "$gccfloat" != "0"; then
-    with_fp_cond=1
-  else
-    with_fp_cond=0
-  fi
+  case "$isarc64" in
+  0)
+    base_machine=arc
+    machine=arc/arc32
+
+    gccfloat=`$CC $CFLAGS $CPPFLAGS -E -dM -xc /dev/null | grep __ARC_FPU_| wc -l`
+    if test "$gccfloat" != "0"; then
+      with_fp_cond=1
+    fi
+    ;;
+  1)
+    base_machine=arc
+    machine=arc/arc64
+    ;;
+  esac
   ;;
-
 esac
