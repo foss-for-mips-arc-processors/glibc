@@ -31,42 +31,42 @@
 ENTRY (_dl_runtime_resolve)
 
 	/* save args to func being resolved before entering resolver.  */
-	push_s	r0
-	push_s	r1
-	push_s	r2
-	push_s	r3
-	st.a	r4, [sp, -4]
-	st.a	r5, [sp, -4]
-	st.a	r6, [sp, -4]
-	st.a	r7, [sp, -4]
-	st.a	r8, [sp, -4]
-	st.a	r9, [sp, -4]
-	cfi_adjust_cfa_offset (40)
-	push_s	blink
-	cfi_adjust_cfa_offset (4)
+	PUSHR	r0
+	PUSHR	r1
+	PUSHR	r2
+	PUSHR	r3
+	PUSHR	r4
+	PUSHR	r5
+	PUSHR	r6
+	PUSHR	r7
+	PUSHR	r8
+	PUSHR	r9
+	cfi_adjust_cfa_offset (10*REGSZ)
+	PUSHR	blink
+	cfi_adjust_cfa_offset (REGSZ)
 	cfi_rel_offset (blink, 0)
 
-	mov_s 	r1, r12
+	MOVR 	r1, r12
 	bl.d  	_dl_fixup
-	mov   	r0, r11
+	MOVR   	r0, r11
 
 	/* restore regs back.  */
-	ld.ab	blink,[sp, 4]
-	cfi_adjust_cfa_offset (-4)
+	POPR	blink
+	cfi_adjust_cfa_offset (-REGSZ)
 	cfi_restore (blink)
-	ld.ab	r9, [sp, 4]
-	ld.ab	r8, [sp, 4]
-	ld.ab	r7, [sp, 4]
-	ld.ab	r6, [sp, 4]
-	ld.ab	r5, [sp, 4]
-	ld.ab	r4, [sp, 4]
-	pop_s   r3
-	pop_s   r2
-	pop_s   r1
-	cfi_adjust_cfa_offset (-36)
+	POPR    r9
+	POPR    r8
+	POPR    r7
+	POPR    r6
+	POPR    r5
+	POPR    r4
+	POPR    r3
+	POPR    r2
+	POPR    r1
+	cfi_adjust_cfa_offset (-9*REGSZ)
 
-	j_s.d   [r0]    /* r0 has resolved function addr.  */
-	pop_s   r0      /* restore first arg to resolved call.  */
-	cfi_adjust_cfa_offset (-4)
+	j.d   [r0]    /* r0 has resolved function addr.  */
+	POPR    r0      /* restore first arg to resolved call.  */
+	cfi_adjust_cfa_offset (-REGSZ)
 	cfi_restore (r0)
 END (_dl_runtime_resolve)

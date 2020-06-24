@@ -59,7 +59,7 @@
 # undef PSEUDO
 # define PSEUDO(name, syscall_name, args)			\
   PSEUDO_NOERRNO(name, syscall_name, args)	ASM_LINE_SEP	\
-    brhi   r0, -4096, L (call_syscall_err)	ASM_LINE_SEP
+    BRRhi   r0, -4096, L (call_syscall_err)	ASM_LINE_SEP
 
 # define ret	j_s  [blink]
 
@@ -98,7 +98,7 @@
 
 /* Don't set errno, return kernel error (in errno form) or zero.  */
 # define ret_ERRVAL						\
-  rsub   r0, r0, 0				ASM_LINE_SEP	\
+  SUBR   r0, 0, r0				ASM_LINE_SEP	\
   ret_NOERRNO
 
 # undef PSEUDO_END_ERRVAL
@@ -117,12 +117,12 @@
 
 # define SYSCALL_ERROR_HANDLER				\
 L (call_syscall_err):			ASM_LINE_SEP	\
-    push_s   blink			ASM_LINE_SEP	\
-    cfi_adjust_cfa_offset (4)		ASM_LINE_SEP	\
+    PUSHR blink				ASM_LINE_SEP	\
+    cfi_adjust_cfa_offset (REGSZ)	ASM_LINE_SEP	\
     cfi_rel_offset (blink, 0)		ASM_LINE_SEP	\
     CALL_ERRNO_SETTER_C			ASM_LINE_SEP	\
-    pop_s  blink			ASM_LINE_SEP	\
-    cfi_adjust_cfa_offset (-4)		ASM_LINE_SEP	\
+    POPR  blink				ASM_LINE_SEP	\
+    cfi_adjust_cfa_offset (-REGSZ)	ASM_LINE_SEP	\
     cfi_restore (blink)			ASM_LINE_SEP	\
     j_s      [blink]
 

@@ -1,11 +1,11 @@
-/* syscall - indirect system call.
-   Copyright (C) 2020-2025 Free Software Foundation, Inc.
+/* ISA Specific Assembler macros for ARC.
+   Copyright (C) 2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
+   modify it under the terms of the GNU Lesser General Public License as
+   published by the Free Software Foundation; either version 2.1 of the
+   License, or (at your option) any later version.
 
    The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -16,18 +16,12 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
+#ifdef	__ASSEMBLER__
 
-ENTRY (syscall)
-	MOVR	r8, r0
-	MOVR	r0, r1
-	MOVR	r1, r2
-	MOVR	r2, r3
-	MOVR	r3, r4
-	MOVR	r4, r5
-	MOVR	r5, r6
+# include <sysdeps/arc/isa-asm-macro-32.h>
 
-	ARC_TRAP_INSN
-	BRRhi	r0, -4096, L (call_syscall_err)
-	j	[blink]
-PSEUDO_END (syscall)
+#else
+
+asm(".include \"sysdeps/arc/isa-asm-macro-32.h\"\n");
+
+#endif

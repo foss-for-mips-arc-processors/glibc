@@ -24,46 +24,46 @@
 
 ENTRY (__setcontext)
 
-	mov  r9, r0	/* Stash @ucp across syscall.  */
+	MOVR  r9, r0	/* Stash @ucp across syscall.  */
 
 	/* rt_sigprocmask (SIG_SETMASK, &ucp->uc_sigmask, NULL, _NSIG8).  */
 	mov  r3, _NSIG8
 	mov  r2, 0
-	add  r1, r0, UCONTEXT_SIGMASK
+	ADDR  r1, r0, UCONTEXT_SIGMASK
 	mov  r0, SIG_SETMASK
 	mov  r8, __NR_rt_sigprocmask
 	ARC_TRAP_INSN
-	brhi r0, -1024, L (call_syscall_err)
+	BRRhi r0, -1024, L (call_syscall_err)
 
 	/* Restore scratch/arg regs for makecontext case.  */
 	add r9, r9, UCONTEXT_MCONTEXT
-	LDR (r0,    r9, 22)
-	LDR (r1,    r9, 21)
-	LDR (r2,    r9, 20)
-	LDR (r3,    r9, 19)
-	LDR (r4,    r9, 18)
-	LDR (r5,    r9, 17)
-	LDR (r6,    r9, 16)
-	LDR (r7,    r9, 15)
+	LDR.as r0,    r9, 22
+	LDR.as r1,    r9, 21
+	LDR.as r2,    r9, 20
+	LDR.as r3,    r9, 19
+	LDR.as r4,    r9, 18
+	LDR.as r5,    r9, 17
+	LDR.as r6,    r9, 16
+	LDR.as r7,    r9, 15
 
 	/* Restore callee saved registers.  */
-	LDR (r13,   r9, 37)
-	LDR (r14,   r9, 36)
-	LDR (r15,   r9, 35)
-	LDR (r16,   r9, 34)
-	LDR (r17,   r9, 33)
-	LDR (r18,   r9, 32)
-	LDR (r19,   r9, 31)
-	LDR (r20,   r9, 30)
-	LDR (r21,   r9, 29)
-	LDR (r22,   r9, 28)
-	LDR (r23,   r9, 27)
-	LDR (r24,   r9, 26)
+	LDR.as r13,   r9, 37
+	LDR.as r14,   r9, 36
+	LDR.as r15,   r9, 35
+	LDR.as r16,   r9, 34
+	LDR.as r17,   r9, 33
+	LDR.as r18,   r9, 32
+	LDR.as r19,   r9, 31
+	LDR.as r20,   r9, 30
+	LDR.as r21,   r9, 29
+	LDR.as r22,   r9, 28
+	LDR.as r23,   r9, 27
+	LDR.as r24,   r9, 26
 
-	LDR (blink, r9,  7)
-	LDR (fp,    r9,  8)
-	LDR (gp,    r9,  9)
-	LDR (sp,    r9, 23)
+	LDR.as blink, r9,  7
+	LDR.as fp,    r9,  8
+	LDR.as gp,    r9,  9
+	LDR.as sp,    r9, 23
 
 	j    [blink]
 
@@ -83,8 +83,8 @@ ENTRY (__startcontext)
 	jl   [r14]
 
 	/* If uc_link (r15) call setcontext with that.  */
-	mov  r0, r15
-	breq r0, 0, 1f
+	MOVR  r0, r15
+	BRReq r0, 0, 1f
 
 	bl   __setcontext
 1:

@@ -47,7 +47,6 @@
 
 # define CALL_MCOUNT		/* Do nothing for now.  */
 
-# define STR(reg, rbase, off)	st  reg, [rbase, off * 4]
-# define LDR(reg, rbase, off)	ld  reg, [rbase, off * 4]
-
 #endif	/* __ASSEMBLER__ */
+
+#include <sysdeps/arc/isa-asm-macros.h>
