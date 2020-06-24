@@ -24,25 +24,25 @@
 
 ENTRY (__longjmp)
 
-	LDR (blink, r0,  0)
-	LDR (sp,    r0,  1)
-	LDR (fp,    r0,  2)
-	LDR (gp,    r0,  3)
+	LDR.as blink, r0,  0
+	LDR.as sp,    r0,  1
+	LDR.as fp,    r0,  2
+	LDR.as gp,    r0,  3
 
-	LDR (r13,   r0,  4)
-	LDR (r14,   r0,  5)
-	LDR (r15,   r0,  6)
-	LDR (r16,   r0,  7)
-	LDR (r17,   r0,  8)
-	LDR (r18,   r0,  9)
-	LDR (r19,   r0, 10)
-	LDR (r20,   r0, 11)
-	LDR (r21,   r0, 12)
-	LDR (r22,   r0, 13)
-	LDR (r23,   r0, 14)
-	LDR (r24,   r0, 15)
+	LDR.as r13,   r0,  4
+	LDR.as r14,   r0,  5
+	LDR.as r15,   r0,  6
+	LDR.as r16,   r0,  7
+	LDR.as r17,   r0,  8
+	LDR.as r18,   r0,  9
+	LDR.as r19,   r0, 10
+	LDR.as r20,   r0, 11
+	LDR.as r21,   r0, 12
+	LDR.as r22,   r0, 13
+	LDR.as r23,   r0, 14
+	LDR.as r24,   r0, 15
 
-	mov.f  r0, r1
+	MOVR.f r0, r1
 	j.d    [blink]
 	mov.z  r0, 1	/* don't return 0 to setjmp callsite from longjmp.  */
 

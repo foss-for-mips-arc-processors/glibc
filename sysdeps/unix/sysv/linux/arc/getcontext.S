@@ -26,39 +26,39 @@
 ENTRY (__getcontext)
 
 	/* Callee saved registers.  */
-	add r2, r0, UCONTEXT_MCONTEXT
-	STR (r13,   r2, 37)
-	STR (r14,   r2, 36)
-	STR (r15,   r2, 35)
-	STR (r16,   r2, 34)
-	STR (r17,   r2, 33)
-	STR (r18,   r2, 32)
-	STR (r19,   r2, 31)
-	STR (r20,   r2, 30)
-	STR (r21,   r2, 29)
-	STR (r22,   r2, 28)
-	STR (r23,   r2, 27)
-	STR (r24,   r2, 26)
+	ADDR r2, r0, UCONTEXT_MCONTEXT
+	STR.as r13,   r2, 37
+	STR.as r14,   r2, 36
+	STR.as r15,   r2, 35
+	STR.as r16,   r2, 34
+	STR.as r17,   r2, 33
+	STR.as r18,   r2, 32
+	STR.as r19,   r2, 31
+	STR.as r20,   r2, 30
+	STR.as r21,   r2, 29
+	STR.as r22,   r2, 28
+	STR.as r23,   r2, 27
+	STR.as r24,   r2, 26
 
-	STR (blink, r2,  7)
-	STR (fp,    r2,  8)
-	STR (gp,    r2,  9)
-	STR (sp,    r2, 23)
+	STR.as blink, r2,  7
+	STR.as fp,    r2,  8
+	STR.as gp,    r2,  9
+	STR.as sp,    r2, 23
 
 	/* Save 0 in r0 placeholder to return 0 when this @ucp activated.  */
-	mov r9, 0
-	STR (r9,    r2, 22)
+	mov    r9, 0
+	STR.as r9,    r2, 22
 
 	/* rt_sigprocmask (SIG_BLOCK, NULL, &ucp->uc_sigmask, _NSIG8).  */
-	mov r3, _NSIG8
-	add r2, r0, UCONTEXT_SIGMASK
-	mov r1, 0
-	mov r0, SIG_BLOCK
-	mov r8, __NR_rt_sigprocmask
+	mov    r3, _NSIG8
+	ADDR   r2, r0, UCONTEXT_SIGMASK
+	mov    r1, 0
+	mov    r0, SIG_BLOCK
+	mov    r8, __NR_rt_sigprocmask
 	ARC_TRAP_INSN
-	brhi    r0, -1024, L (call_syscall_err)
+	BRRhi   r0, -1024, L (call_syscall_err)
 	j.d	[blink]
-	mov r0, 0	/* Success, error handled in .Lcall_syscall_err.  */
+	mov     r0, 0	/* Success, error handled in .Lcall_syscall_err.  */
 
 PSEUDO_END (__getcontext)
 weak_alias (__getcontext, getcontext)

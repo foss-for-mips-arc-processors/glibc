@@ -32,6 +32,7 @@
 #include <dl-tls.h>
 #include <dl-static-tls.h>
 #include <dl-machine-rel.h>
+#include <sysdep.h>
 
 /* Dynamic Linking ABI for ARCv2 ISA.
 
@@ -114,7 +115,7 @@ elf_machine_load_address (void)
   /* For build address, below generates
      ld  r0, [pcl, _GLOBAL_OFFSET_TABLE_@pcl].  */
   build_addr = elf_machine_dynamic ();
-  __asm__ ("add %0, pcl, _DYNAMIC@pcl	\n" : "=r" (run_addr));
+  __asm__ ("ADDR %0, pcl, _DYNAMIC@pcl	\n" : "=r" (run_addr));
 
   return run_addr - build_addr;
 }
@@ -159,19 +160,19 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
 __start:								\n\
 	/* (1). bootstrap ld.so.  */					\n\
 	bl.d    _dl_start                                       	\n\
-	mov_s   r0, sp  /* pass ptr to aux vector tbl.    */    	\n\
-	mov r13, r0	/* safekeep app elf entry point.  */		\n\
-	ld_s    r1, [sp]       /* orig argc.  */			\n\
+	MOVR    r0, sp  /* pass ptr to aux vector tbl.    */    	\n\
+	MOVR    r13, r0	/* safekeep app elf entry point.  */		\n\
+	LDR     r1,  sp       	/* orig argc.  */			\n\
 									\n\
 	/* (2). call preinit stuff.  */					\n\
-	ld	r0, [pcl, _rtld_local@pcl]				\n\
-	add	r2, sp, 4	; argv					\n\
-	add2	r3, r2, r1						\n\
-	add	r3, r3, 4	; env					\n\
+	LDR	r0, pcl, _rtld_local@pcl				\n\
+	ADDR	r2, sp, 4	; argv					\n\
+	ADD2R	r3, r2, r1						\n\
+	ADDR	r3, r3, 4	; env					\n\
 	bl	_dl_init@plt						\n\
 									\n\
 	/* (3) call app elf entry point.  */				\n\
-	add     r0, pcl, _dl_fini@pcl					\n\
+	ADDR    r0, pcl, _dl_fini@pcl					\n\
 	j	[r13]							\n\
 									\n\
 	.size  __start,.-__start                               		\n\

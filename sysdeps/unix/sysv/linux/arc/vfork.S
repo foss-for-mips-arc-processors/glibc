@@ -28,11 +28,11 @@
 
 ENTRY (__vfork)
 	mov	r0, CLONE_FLAGS_FOR_VFORK
-	mov_s	r1, sp
+	MOVR	r1, sp
 	mov	r8, __NR_clone
 	ARC_TRAP_INSN
 
-	cmp	r0, 0
+	CMPR	r0, 0
 	jge	[blink]	; child continues
 
 	b   __syscall_error
