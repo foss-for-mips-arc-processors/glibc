@@ -41,23 +41,23 @@ ENTRY (__sigsetjmp)
 	   that will be right next to this setjmp call-site in BLINK
 	   since "C" caller of this routine will do a branch-n-link.  */
 
-	STR (blink, r0,  0)
-	STR (sp,    r0,  1)
-	STR (fp,    r0,  2)
-	STR (gp,    r0,  3)
+	STR.as blink, r0,  0
+	STR.as sp,    r0,  1
+	STR.as fp,    r0,  2
+	STR.as gp,    r0,  3
 
-	STR (r13,   r0,  4)
-	STR (r14,   r0,  5)
-	STR (r15,   r0,  6)
-	STR (r16,   r0,  7)
-	STR (r17,   r0,  8)
-	STR (r18,   r0,  9)
-	STR (r19,   r0, 10)
-	STR (r20,   r0, 11)
-	STR (r21,   r0, 12)
-	STR (r22,   r0, 13)
-	STR (r23,   r0, 14)
-	STR (r24,   r0, 15)
+	STR.as r13,   r0,  4
+	STR.as r14,   r0,  5
+	STR.as r15,   r0,  6
+	STR.as r16,   r0,  7
+	STR.as r17,   r0,  8
+	STR.as r18,   r0,  9
+	STR.as r19,   r0, 10
+	STR.as r20,   r0, 11
+	STR.as r21,   r0, 12
+	STR.as r22,   r0, 13
+	STR.as r23,   r0, 14
+	STR.as r24,   r0, 15
 
 	b    __sigjmp_save
 

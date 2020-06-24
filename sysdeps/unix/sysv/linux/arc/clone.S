@@ -31,41 +31,41 @@
  clone syscall in kernel (ABI: CONFIG_CLONE_BACKWARDS)
 
   int sys_clone(unsigned long int clone_flags,
-	        unsigned long int newsp,
+		unsigned long int newsp,
 		int __user *parent_tidptr,
 		void *tls,
 		int __user *child_tidptr).  */
 
 ENTRY (__clone)
-	cmp	r0, 0		/* @fn can't be NULL.  */
-	and	r1,r1,-4	/* @child_stack be 4 bytes aligned per ABI.  */
-	cmp.ne	r1, 0		/* @child_stack can't be NULL.  */
+	CMPR	r0, 0		/* @fn can't be NULL.  */
+	ANDR	r1, r1, -REGSZ	/* @child_stack 4/8 aligned per ABI.  */
+	CMPR.ne	r1, 0		/* @child_stack can't be NULL.  */
 	bz	L (__sys_err)
 
 	/* save some of the orig args
 	   r0 containing @fn will be clobbered AFTER syscall (with ret val)
 	   rest are clobbered BEFORE syscall due to different arg ordering.  */
-	mov	r10, r0		/* @fn.  */
-	mov	r11, r3		/* @args.  */
-	mov	r12, r2		/* @clone_flags.  */
-	mov	r9,  r5		/* @tls.  */
+	MOVR	r10, r0		/* @fn.  */
+	MOVR	r11, r3		/* @args.  */
+	MOVR	r12, r2		/* @clone_flags.  */
+	MOVR	r9,  r5		/* @tls.  */
 
 	/* adjust libc args for syscall.  */
 
-	mov 	r0, r2		/* libc @flags is 1st syscall arg.  */
-	mov	r2, r4		/* libc @ptid.  */
-	mov	r3, r5		/* libc @tls.  */
-	mov	r4, r6		/* libc @ctid.  */
+	MOVR	r0, r2		/* libc @flags is 1st syscall arg.  */
+	MOVR	r2, r4		/* libc @ptid.  */
+	MOVR	r3, r5		/* libc @tls.  */
+	MOVR	r4, r6		/* libc @ctid.  */
 	mov	r8, __NR_clone
 	ARC_TRAP_INSN
 
-	cmp	r0, 0		/* return code : 0 new process, !0 parent.  */
+	CMPR	r0, 0		/* return code : 0 new process, !0 parent.  */
 	beq	thread_start_clone
 	blt	L (__sys_err2)	/* < 0 (signed) error.  */
 	j	[blink]		/* Parent returns.  */
 
 L (__sys_err):
-	mov	r0, -EINVAL
+	MOVR	r0, -EINVAL
 L (__sys_err2):
 	/* (1) No need to make -ve kernel error code as positive errno
 	       __syscall_error expects the -ve error code returned by kernel
@@ -87,7 +87,7 @@ thread_start_clone:
 
 	/* Child jumps off to @fn with @arg as argument.  */
 	jl.d	[r10]
-	mov	r0, r11
+	MOVR	r0, r11
 
 	/* exit() with result from @fn (already in r0).  */
 	mov	r8, __NR_exit

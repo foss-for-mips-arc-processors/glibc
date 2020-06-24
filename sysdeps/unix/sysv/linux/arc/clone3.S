@@ -37,9 +37,9 @@
 ENTRY(__clone3)
 
 	/* Save args for the child.  */
-	mov	r10, r0		/* cl_args  */
-	mov	r11, r2		/* func	 */
-	mov	r12, r3		/* args  */
+	MOVR	r10, r0		/* cl_args  */
+	MOVR	r11, r2		/* func  */
+	MOVR	r12, r3		/* args  */
 
 	/* Sanity check args.  */
 	breq	r10, 0, L (__sys_err)	/* No NULL cl_args pointer.  */
@@ -49,17 +49,17 @@ ENTRY(__clone3)
 	   r8: system call number
 	   r0: cl_args
 	   r1: size  */
-	mov	r0, r10
+	MOVR	r0, r10
 	mov	r8, __NR_clone3
 	ARC_TRAP_INSN
 
-	cmp	r0, 0
+	CMPR	r0, 0
 	beq	thread_start_clone3	/* Child returns.  */
 	blt	L (__sys_err2)
 	j	[blink]			/* Parent returns.  */
 
 L (__sys_err):
-	mov	r0, -EINVAL
+	MOVR	r0, -EINVAL
 L (__sys_err2):
 	b	__syscall_error
 PSEUDO_END (__clone3)
@@ -74,7 +74,7 @@ thread_start_clone3:
 
 	/* Child jumps off to @fn with @arg as argument.  */
 	jl.d	[r11]
-	mov	r0, r12
+	MOVR	r0, r12
 
 	/* exit() with result from @fn (already in r0).  */
 	mov	r8, __NR_exit
