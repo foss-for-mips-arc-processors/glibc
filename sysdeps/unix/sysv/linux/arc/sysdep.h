@@ -26,6 +26,8 @@
 
 /* "workarounds" for generic code needing to handle 64-bit time_t.  */
 
+#ifndef __ARC64__
+
 /* Fix sysdeps/unix/sysv/linux/clock_getcpuclockid.c.  */
 #define __NR_clock_getres	__NR_clock_getres_time64
 /* Fix sysdeps/nptl/lowlevellock-futex.h.  */
@@ -42,6 +44,8 @@
 #define __NR_semtimedop		__NR_semtimedop_time64
 /* Hack sysdeps/unix/sysv/linux/generic/utimes.c.  */
 #define __NR_utimensat		__NR_utimensat_time64
+
+#endif
 
 /* For RTLD_PRIVATE_ERRNO.  */
 #include <dl-sysdep.h>
