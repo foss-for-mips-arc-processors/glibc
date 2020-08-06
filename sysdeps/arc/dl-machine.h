@@ -36,15 +36,15 @@
 
 /* Dynamic Linking ABI for ARCv2 ISA.
 
-                        PLT
+                        .plt
           --------------------------------	<---- DT_PLTGOT
           |  ld r11, [pcl, off-to-GOT[1] |  0
           |                              |  4
-   plt0   |  ld r10, [pcl, off-to-GOT[2] |  8
+   PLT0   |  ld r10, [pcl, off-to-GOT[2] |  8
           |                              | 12
           |  j [r10]                     | 16
           --------------------------------
-          |    Base address of GOT       | 20
+          |   Base address of .got.plt   | 20
           --------------------------------
           |  ld r12, [pcl, off-to-GOT[3] | 24
    plt1   |                              |
@@ -70,11 +70,11 @@
           --------------
           |    [1]     |  Module info - setup by ld.so
           --------------
-          |    [2]     |  resolver entry point
+          |    [2]     |  resolver entry point: _dl_runtime_resolve
           --------------
           |    [3]     |
           |    ...     |  Runtime address for function symbols
-          |    [f]     |
+          |    [f]     |  Initially point to PLT0
           --------------
 
    For ARCompact, the PLT is 12 bytes due to short instructions
@@ -92,6 +92,8 @@ static inline int
 elf_machine_matches_host (const ElfW(Ehdr) *ehdr)
 {
   return (ehdr->e_machine == EM_ARCV2		 /* ARC HS.  */
+	  || ehdr->e_machine == EM_ARCV3         /* ARCv3: ARC64.  */
+	  || ehdr->e_machine == EM_ARCV3_32      /* ARCv3: ARC32.  */
 	  || ehdr->e_machine == EM_ARC_COMPACT); /* ARC 700.  */
 }
 
@@ -132,10 +134,13 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
 
   if (l->l_info[DT_JMPREL] && lazy)
     {
-      /* On ARC DT_PLTGOT point to .plt whose 5th word (after the PLT header)
-         contains the address of .got.  */
+      /* update .got.plt[1] and .got.plt[2].
+         DT_PLTGOT point to base of .plt and PLT0 is 3 instructions
+         for total of 20 bytes, see illustration at top.
+         The word right after contains base address of .got.plt.  */
       ElfW(Addr) *plt_base = (ElfW(Addr) *) D_PTR (l, l_info[DT_PLTGOT]);
-      ElfW(Addr) *got = (ElfW(Addr) *) (plt_base[5] + l->l_addr);
+      ElfW(Addr) *got_build = (ElfW(Addr) *) ((uintptr_t)plt_base + 20);
+      ElfW(Addr) *got = (ElfW(Addr) *) (*got_build + l->l_addr);
 
       got[1] = (ElfW(Addr)) l;	/* Identify this shared object.  */
 
@@ -152,6 +157,36 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
     -calls into generic ldso entry point _dl_start
     -optionally adjusts argc for executable if exec passed as cmd
     -calls into app main with address of finaliser.  */
+
+#ifdef __ARC64__
+
+#define RTLD_START asm ("\
+.text									\n\
+.globl __start								\n\
+.type __start, @function						\n\
+__start:								\n\
+	/* (1). bootstrap ld.so.  */					\n\
+	bl.d    _dl_start                                       	\n\
+	MOVR    r0, sp  /* pass ptr to aux vector tbl.    */    	\n\
+	MOVR    r14, r0	/* safekeep app elf entry point.  */		\n\
+	LDR     r1,  sp       	/* orig argc.  */			\n\
+									\n\
+	/* (2). call preinit stuff.  */					\n\
+	LDR	r0, pcl, _rtld_local@pcl				\n\
+	ADDR	r2, sp, 8	; argv					\n\
+	ADD3R	r3, r2, r1						\n\
+	ADDR	r3, r3, 8	; env					\n\
+	bl	_dl_init@plt						\n\
+									\n\
+	/* (3) call app elf entry point.  */				\n\
+	ADDR    r0, pcl, _dl_fini@pcl					\n\
+	j	[r14]							\n\
+									\n\
+	.size  __start,.-__start                               		\n\
+	.previous                                               	\n\
+");
+
+#else
 
 #define RTLD_START asm ("\
 .text									\n\
@@ -178,6 +213,8 @@ __start:								\n\
 	.size  __start,.-__start                               		\n\
 	.previous                                               	\n\
 ");
+
+#endif
 
 /* ELF_RTYPE_CLASS_PLT iff TYPE describes relocation of a PLT entry, so
    PLT entries should not be allowed to define the value.
@@ -290,6 +327,7 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
           break;
 
         case R_ARC_32:
+        case R_ARC_64:
           *reloc_addr += value + reloc->r_addend;
           break;
 
