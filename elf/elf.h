@@ -4354,6 +4354,7 @@ enum
 #define R_ARC_16		0x2
 #define R_ARC_24		0x3
 #define R_ARC_32		0x4
+#define R_ARC_64		0x5
 
 #define R_ARC_B22_PCREL		0x6
 #define R_ARC_H30		0x7
