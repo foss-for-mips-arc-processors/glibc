@@ -358,6 +358,8 @@ typedef struct
 
 #define EM_BPF		247	/* Linux BPF -- in-kernel virtual machine */
 #define EM_CSKY		252     /* C-SKY */
+#define EM_ARCV3	253     /* Synopsys ARCv3 64-bit ISA */
+#define EM_ARCV3_32	255     /* Synopsys ARCv3 32-bit ISA */
 #define EM_LOONGARCH	258	/* LoongArch */
 
 #define EM_NUM		259
@@ -4365,7 +4367,7 @@ enum
 /* Processor specific values for the Shdr sh_type field.  */
 #define SHT_ARC_ATTRIBUTES	(SHT_LOPROC + 1) /* ARC attributes section.  */
 
-/* ARCompact/ARCv2 specific relocs.  */
+/* ARCompact/ARCv2/ARCv3 specific relocs.  */
 #define R_ARC_NONE		0x0
 #define R_ARC_8			0x1
 #define R_ARC_16		0x2
