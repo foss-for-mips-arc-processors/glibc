@@ -59,6 +59,11 @@ ENTRY (__sigsetjmp)
 	STR.as r23,   r0, 14
 	STR.as r24,   r0, 15
 
+#if defined(__ARCV3__)
+	STR.as r25,   r0, 16
+	STR.as r26,   r0, 17
+#endif
+
 	b    __sigjmp_save
 
 END (__sigsetjmp)
