@@ -42,6 +42,11 @@ ENTRY (__longjmp)
 	LDR.as r23,   r0, 14
 	LDR.as r24,   r0, 15
 
+#if defined(__ARCV3__)
+	LDR.as r25,   r0, 16
+	LDR.as r26,   r0, 17
+#endif
+
 	MOVR.f r0, r1
 	j.d    [blink]
 	mov.z  r0, 1	/* don't return 0 to setjmp callsite from longjmp.  */
