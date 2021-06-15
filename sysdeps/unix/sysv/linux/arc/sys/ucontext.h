@@ -42,6 +42,7 @@ typedef struct
   unsigned long int __efa;
   unsigned long int __stop_pc;
   unsigned long int __r30, __r58, __r59;
+  unsigned long int __fpr[32];
 } mcontext_t;
 
 /* Userlevel context.  */

@@ -20,7 +20,11 @@
 #define _ARC_BITS_SETJMP_H 1
 
 /* Saves r13-r25 (callee-saved), fp (frame pointer), sp (stack pointer),
-   blink (branch-n-link).  */
+   blink (branch-n-link), FP regs.  */
+#if defined (__ARC_FLOAT_ABI_HARD__)
+typedef long int __jmp_buf[64];
+#else
 typedef long int __jmp_buf[32];
+#endif
 
 #endif
