@@ -43,6 +43,25 @@ ENTRY (__swapcontext)
 	STR.as gp,    r2,  9
 	STR.as sp,    r2, 23
 
+#if defined (__ARC_FLOAT_ABI_HARD__)
+	FSTR.as	f16,  r2, 51
+	FSTR.as	f17,  r2, 52
+	FSTR.as	f18,  r2, 53
+	FSTR.as	f19,  r2, 54
+	FSTR.as	f20,  r2, 55
+	FSTR.as	f21,  r2, 56
+	FSTR.as	f22,  r2, 57
+	FSTR.as	f23,  r2, 58
+	FSTR.as	f24,  r2, 59
+	FSTR.as	f25,  r2, 60
+	FSTR.as	f26,  r2, 61
+	FSTR.as	f27,  r2, 62
+	FSTR.as	f28,  r2, 63
+	FSTR.as	f29,  r2, 64
+	FSTR.as	f30,  r2, 65
+	FSTR.as	f31,  r2, 66
+#endif
+
 	/* Save 0 in r0 placeholder to return 0 when @oucp activated.  */
 	mov   r9, 0
 	STR.as r9,    r2, 22

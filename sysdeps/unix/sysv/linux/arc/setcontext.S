@@ -65,6 +65,34 @@ ENTRY (__setcontext)
 	LDR.as gp,    r9,  9
 	LDR.as sp,    r9, 23
 
+#if defined (__ARC_FLOAT_ABI_HARD__)
+	FLDR.as	f0,   r9, 43
+	FLDR.as	f1,   r9, 44
+	FLDR.as	f2,   r9, 45
+	FLDR.as	f3,   r9, 46
+	FLDR.as	f4,   r9, 47
+	FLDR.as	f5,   r9, 48
+	FLDR.as	f6,   r9, 49
+	FLDR.as	f7,   r9, 50
+
+	FLDR.as	f16,  r9, 51
+	FLDR.as	f17,  r9, 52
+	FLDR.as	f18,  r9, 53
+	FLDR.as	f19,  r9, 54
+	FLDR.as	f20,  r9, 55
+	FLDR.as	f21,  r9, 56
+	FLDR.as	f22,  r9, 57
+	FLDR.as	f23,  r9, 58
+	FLDR.as	f24,  r9, 59
+	FLDR.as	f25,  r9, 60
+	FLDR.as	f26,  r9, 61
+	FLDR.as	f27,  r9, 62
+	FLDR.as	f28,  r9, 63
+	FLDR.as	f29,  r9, 64
+	FLDR.as	f30,  r9, 66
+	FLDR.as	f31,  r9, 68
+#endif
+
 	j    [blink]
 
 PSEUDO_END (__setcontext)

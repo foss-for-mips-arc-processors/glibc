@@ -64,6 +64,24 @@ ENTRY (__sigsetjmp)
 	STR.as r26,   r0, 17
 #endif
 
+#if defined (__ARC_FLOAT_ABI_HARD__)
+	FSTR.as	f16,  r0, 18
+	FSTR.as	f17,  r0, 19
+	FSTR.as	f18,  r0, 20
+	FSTR.as	f19,  r0, 21
+	FSTR.as	f20,  r0, 22
+	FSTR.as	f21,  r0, 23
+	FSTR.as	f22,  r0, 24
+	FSTR.as	f23,  r0, 25
+	FSTR.as	f24,  r0, 26
+	FSTR.as	f25,  r0, 27
+	FSTR.as	f26,  r0, 28
+	FSTR.as	f27,  r0, 29
+	FSTR.as	f28,  r0, 30
+	FSTR.as	f29,  r0, 31
+	FSTR.as	f30,  r0, 32
+	FSTR.as	f31,  r0, 33
+#endif
 	b    __sigjmp_save
 
 END (__sigsetjmp)

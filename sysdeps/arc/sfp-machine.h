@@ -17,10 +17,12 @@
    <https://www.gnu.org/licenses/>.  */
 
 
-#define _FP_W_TYPE_SIZE		32
-#define _FP_W_TYPE		unsigned long
-#define _FP_WS_TYPE		signed long
-#define _FP_I_TYPE		long
+#ifndef __ARC64__
+
+# define _FP_W_TYPE_SIZE	32
+# define _FP_W_TYPE		unsigned long
+# define _FP_WS_TYPE		signed long
+# define _FP_I_TYPE		long
 
 #define _FP_MUL_MEAT_S(R,X,Y)				\
   _FP_MUL_MEAT_1_wide(_FP_WFRACBITS_S,R,X,Y,umul_ppmm)
@@ -66,5 +68,50 @@
       }								\
     R##_c = FP_CLS_NAN;						\
   } while (0)
+
+#else
+
+# define _FP_W_TYPE_SIZE	64
+# define _FP_W_TYPE		unsigned long long
+# define _FP_WS_TYPE		signed long long
+# define _FP_I_TYPE		long long
+
+# define _FP_MUL_MEAT_S(R, X, Y)					\
+  _FP_MUL_MEAT_1_imm (_FP_WFRACBITS_S, R, X, Y)
+# define _FP_MUL_MEAT_D(R, X, Y)					\
+  _FP_MUL_MEAT_1_wide (_FP_WFRACBITS_D, R, X, Y, umul_ppmm)
+# define _FP_MUL_MEAT_Q(R, X, Y)					\
+  _FP_MUL_MEAT_2_wide_3mul (_FP_WFRACBITS_Q, R, X, Y, umul_ppmm)
+
+# define _FP_MUL_MEAT_DW_S(R, X, Y)					\
+  _FP_MUL_MEAT_DW_1_imm (_FP_WFRACBITS_S, R, X, Y)
+# define _FP_MUL_MEAT_DW_D(R, X, Y)					\
+  _FP_MUL_MEAT_DW_1_wide (_FP_WFRACBITS_D, R, X, Y, umul_ppmm)
+# define _FP_MUL_MEAT_DW_Q(R, X, Y)					\
+  _FP_MUL_MEAT_DW_2_wide_3mul (_FP_WFRACBITS_Q, R, X, Y, umul_ppmm)
+
+# define _FP_DIV_MEAT_S(R, X, Y)	_FP_DIV_MEAT_1_imm (S, R, X, Y, _FP_DIV_HELP_imm)
+# define _FP_DIV_MEAT_D(R, X, Y)	_FP_DIV_MEAT_1_udiv_norm (D, R, X, Y)
+# define _FP_DIV_MEAT_Q(R, X, Y)	_FP_DIV_MEAT_2_udiv (Q, R, X, Y)
+
+# define _FP_NANFRAC_S		_FP_QNANBIT_S
+# define _FP_NANFRAC_D		_FP_QNANBIT_D
+# define _FP_NANFRAC_Q		_FP_QNANBIT_Q, 0
+
+#define _FP_NANSIGN_S		0
+#define _FP_NANSIGN_D		0
+#define _FP_NANSIGN_Q		0
+
+#define _FP_KEEPNANFRACP 0
+#define _FP_QNANNEGATEDP 0
+
+#define _FP_CHOOSENAN(fs, wc, R, X, Y, OP)	\
+  do {						\
+    R##_s = _FP_NANSIGN_##fs;			\
+    _FP_FRAC_SET_##wc (R, _FP_NANFRAC_##fs);	\
+    R##_c = FP_CLS_NAN;				\
+  } while (0)
+
+#endif
 
 #define _FP_TININESS_AFTER_ROUNDING 1

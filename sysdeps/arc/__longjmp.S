@@ -47,6 +47,25 @@ ENTRY (__longjmp)
 	LDR.as r26,   r0, 17
 #endif
 
+#if defined (__ARC_FLOAT_ABI_HARD__)
+	FLDR.as	f16,  r0, 18
+	FLDR.as	f17,  r0, 19
+	FLDR.as	f18,  r0, 20
+	FLDR.as	f19,  r0, 21
+	FLDR.as	f20,  r0, 22
+	FLDR.as	f21,  r0, 23
+	FLDR.as	f22,  r0, 24
+	FLDR.as	f23,  r0, 25
+	FLDR.as	f24,  r0, 26
+	FLDR.as	f25,  r0, 27
+	FLDR.as	f26,  r0, 28
+	FLDR.as	f27,  r0, 29
+	FLDR.as	f28,  r0, 30
+	FLDR.as	f29,  r0, 31
+	FLDR.as	f30,  r0, 32
+	FLDR.as	f31,  r0, 33
+#endif
+
 	MOVR.f r0, r1
 	j.d    [blink]
 	mov.z  r0, 1	/* don't return 0 to setjmp callsite from longjmp.  */
