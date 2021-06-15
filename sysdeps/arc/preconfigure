@@ -7,16 +7,16 @@ arc*)
   0)
     base_machine=arc
     machine=arc/arc32
-
-    gccfloat=`$CC $CFLAGS $CPPFLAGS -E -dM -xc /dev/null | grep __ARC_FPU_| wc -l`
-    if test "$gccfloat" != "0"; then
-      with_fp_cond=1
-    fi
     ;;
   1)
     base_machine=arc
     machine=arc/arc64
     ;;
   esac
+
+  gccfloat=`$CC $CFLAGS $CPPFLAGS -E -dM -xc /dev/null | grep __ARC_FPU_| wc -l`
+  if test "$gccfloat" != "0"; then
+    with_fp_cond=1
+  fi
   ;;
 esac

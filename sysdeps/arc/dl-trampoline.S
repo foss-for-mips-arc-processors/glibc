@@ -41,7 +41,21 @@ ENTRY (_dl_runtime_resolve)
 	PUSHR	r7
 	PUSHR	r8
 	PUSHR	r9
+
+#if defined (__ARC_FLOAT_ABI_HARD__)
+	FPUSHR	f0
+	FPUSHR	f1
+	FPUSHR	f2
+	FPUSHR	f3
+	FPUSHR	f4
+	FPUSHR	f5
+	FPUSHR	f6
+	FPUSHR	f7
+	cfi_adjust_cfa_offset (18*REGSZ)
+#else
 	cfi_adjust_cfa_offset (10*REGSZ)
+#endif
+
 	PUSHR	blink
 	cfi_adjust_cfa_offset (REGSZ)
 	cfi_rel_offset (blink, 0)
@@ -54,6 +68,17 @@ ENTRY (_dl_runtime_resolve)
 	POPR	blink
 	cfi_adjust_cfa_offset (-REGSZ)
 	cfi_restore (blink)
+
+#if defined (__ARC_FLOAT_ABI_HARD__)
+	FPOPR	f7
+	FPOPR	f6
+	FPOPR	f5
+	FPOPR	f4
+	FPOPR	f3
+	FPOPR	f2
+	FPOPR	f1
+	FPOPR	f0
+#endif
 	POPR    r9
 	POPR    r8
 	POPR    r7
@@ -63,7 +88,11 @@ ENTRY (_dl_runtime_resolve)
 	POPR    r3
 	POPR    r2
 	POPR    r1
+#if defined (__ARC_FLOAT_ABI_HARD__)
+	cfi_adjust_cfa_offset (-17*REGSZ)
+#else
 	cfi_adjust_cfa_offset (-9*REGSZ)
+#endif
 
 	j.d   [r0]    /* r0 has resolved function addr.  */
 	POPR    r0      /* restore first arg to resolved call.  */
