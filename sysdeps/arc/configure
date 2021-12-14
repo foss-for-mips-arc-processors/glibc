@@ -10,7 +10,7 @@ libc_cv_asm_line_sep='`'
 printf "%s\n" "#define ASM_LINE_SEP $libc_cv_asm_line_sep" >>confdefs.h
 
 
-# For ARC64 generate a symbol for selecting right dynamic linker
+# For arc64:64 generate a symbol for selecting right dynamic linker
 
 
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for grep that handles long lines and -e" >&5
@@ -163,7 +163,7 @@ then :
 else $as_nop
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
-#ifdef __ARC64__
+#ifdef __ARC64_ARCH64__
                       yes
                      #endif
 
@@ -186,6 +186,42 @@ if test $libc_cv_arc64 = yes; then
 
   config_vars="$config_vars
 default-abi = arc64le"
+
+else
+
+# For arc64:32 generate a symbol for selecting right dynamic linker
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for arc32" >&5
+printf %s "checking for arc32... " >&6; }
+if test ${libc_cv_arc32+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#ifdef __ARC64_ARCH32__
+                      yes
+                     #endif
+
+_ACEOF
+if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
+  $EGREP "yes" >/dev/null 2>&1
+then :
+  libc_cv_arc32=yes
+else $as_nop
+  libc_cv_arc32=no
+fi
+rm -rf conftest*
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_arc32" >&5
+printf "%s\n" "$libc_cv_arc32" >&6; }
+
+if test $libc_cv_arc32 = yes; then
+  # For shlib-versions.
+  printf "%s\n" "#define HAVE_ARC32 1" >>confdefs.h
+
+  config_vars="$config_vars
+default-abi = arc32le"
 
 else
 
@@ -224,7 +260,12 @@ default-abi = arcbe"
 else
   config_vars="$config_vars
 default-abi = arcle"
+# big endian
 fi
 
+# arc64:32
+fi
+
+# arc64:64
 fi
 

@@ -120,7 +120,10 @@
 /* ARC big endian ABI */
 #undef HAVE_ARC_BE
 
-/* ARC64 ABI */
+/* ARC64:32 ABI */
+#undef HAVE_ARC32
+
+/* ARC64:64 ABI */
 #undef HAVE_ARC64
 
 /* C-SKY ABI version.  */

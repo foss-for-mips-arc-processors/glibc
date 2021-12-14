@@ -158,7 +158,7 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
     -optionally adjusts argc for executable if exec passed as cmd
     -calls into app main with address of finaliser.  */
 
-#ifdef __ARC64__
+#ifdef __ARC64_ARCH64__
 
 #define RTLD_START asm ("\
 .text									\n\

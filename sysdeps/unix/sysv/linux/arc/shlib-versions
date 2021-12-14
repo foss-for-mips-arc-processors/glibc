@@ -1,5 +1,8 @@
 DEFAULT                 GLIBC_2.32
 
+%ifdef HAVE_ARC32
+ld=ld-linux-arc32.so.2
+%else
 %ifdef HAVE_ARC64
 ld=ld-linux-arc64.so.2
 %else
@@ -7,5 +10,6 @@ ld=ld-linux-arc64.so.2
 ld=ld-linux-arceb.so.2
 %else
 ld=ld-linux-arc.so.2
+%endif
 %endif
 %endif
