@@ -31,7 +31,7 @@ typedef uintptr_t uatomicptr_t;
 typedef intmax_t atomic_max_t;
 typedef uintmax_t uatomic_max_t;
 
-# if defined(__ARC64__)
+# if defined(__ARC64_ARCH64__)
 #  define __HAVE_64B_ATOMICS 1
 # else
 #  define __HAVE_64B_ATOMICS 0

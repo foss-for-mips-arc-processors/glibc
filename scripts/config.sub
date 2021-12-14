@@ -1170,6 +1170,10 @@ case $cpu-$vendor in
 		cpu=mipsallegrexel
 		vendor=sony
 		;;
+	arc32*-*)
+		cpu=arc32
+		vendor=linux
+		;;
 	arc64*-*)
 		cpu=arc64
 		vendor=linux
