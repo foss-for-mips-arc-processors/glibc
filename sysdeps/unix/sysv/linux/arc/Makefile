@@ -12,12 +12,13 @@ sysdep_headers += sys/cachectl.h
 sysdep_routines += cacheflush
 endif
 
-abi-variants := arcle arcbe arc64le
+abi-variants := arcle arcbe arc32le arc64le
 
 ifeq (,$(filter $(default-abi),$(abi-variants)))
 $(error Unknown ABI $(default-abi), must be one of $(abi-variants))
 endif
 
-abi-arcle-condition   := !defined __ARC64__ && !defined __BIG_ENDIAN__
-abi-arcbe-condition   := !defined __ARC64__ &&  defined __BIG_ENDIAN__
-abi-arc64le-condition :=  defined __ARC64__ && !defined __BIG_ENDIAN__
+abi-arcle-condition   := !defined __ARC64__        && !defined __BIG_ENDIAN__
+abi-arcbe-condition   := !defined __ARC64__        &&  defined __BIG_ENDIAN__
+abi-arc32le-condition :=  defined __ARC64_ARCH32__ && !defined __BIG_ENDIAN__
+abi-arc64le-condition :=  defined __ARC64_ARCH64__ && !defined __BIG_ENDIAN__

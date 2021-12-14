@@ -9,10 +9,10 @@ libc_cv_have_sdata_section=no
 libc_cv_asm_line_sep='`'
 AC_DEFINE_UNQUOTED(ASM_LINE_SEP, $libc_cv_asm_line_sep)
 
-# For ARC64 generate a symbol for selecting right dynamic linker
+# For arc64:64 generate a symbol for selecting right dynamic linker
 AC_CACHE_CHECK([for arc64],
   [libc_cv_arc64],
-  [AC_EGREP_CPP(yes,[#ifdef __ARC64__
+  [AC_EGREP_CPP(yes,[#ifdef __ARC64_ARCH64__
                       yes
                      #endif
   ], libc_cv_arc64=yes, libc_cv_arc64=no)])
@@ -20,6 +20,21 @@ if test $libc_cv_arc64 = yes; then
   # For shlib-versions.
   AC_DEFINE(HAVE_ARC64)
   LIBC_CONFIG_VAR([default-abi], [arc64le])
+
+else
+
+# For arc64:32 generate a symbol for selecting right dynamic linker
+AC_CACHE_CHECK([for arc32],
+  [libc_cv_arc32],
+  [AC_EGREP_CPP(yes,[#ifdef __ARC64_ARCH32__
+                      yes
+                     #endif
+  ], libc_cv_arc32=yes, libc_cv_arc32=no)])
+
+if test $libc_cv_arc32 = yes; then
+  # For shlib-versions.
+  AC_DEFINE(HAVE_ARC32)
+  LIBC_CONFIG_VAR([default-abi], [arc32le])
 
 else
 
@@ -36,6 +51,11 @@ if test $libc_cv_arc_be = yes; then
   LIBC_CONFIG_VAR([default-abi], [arcbe])
 else
   LIBC_CONFIG_VAR([default-abi], [arcle])
+# big endian
 fi
 
+# arc64:32
+fi
+
+# arc64:64
 fi
