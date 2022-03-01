@@ -120,6 +120,9 @@
 /* ARC big endian ABI */
 #undef HAVE_ARC_BE
 
+/* ARC 700 */
+#undef HAVE_ARC700
+
 /* ARC64:32 ABI */
 #undef HAVE_ARC32
 

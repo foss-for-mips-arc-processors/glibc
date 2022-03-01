@@ -134,7 +134,11 @@ L (call_syscall_err):			ASM_LINE_SEP	\
     mov    r8, __NR_##syscall_name	ASM_LINE_SEP	\
     ARC_TRAP_INSN			ASM_LINE_SEP
 
+# ifdef __ARC700__
+# define ARC_TRAP_INSN	trap0
+# else
 # define ARC_TRAP_INSN	trap_s 0
+# endif
 
 #else  /* !__ASSEMBLER__ */
 
@@ -143,7 +147,11 @@ extern long int __syscall_error (long int);
 hidden_proto (__syscall_error)
 # endif
 
+# ifdef __ARC700__
+# define ARC_TRAP_INSN	"trap0		\n\t"
+# else
 # define ARC_TRAP_INSN	"trap_s 0	\n\t"
+#endif
 
 # define HAVE_CLONE3_WRAPPER	1
 

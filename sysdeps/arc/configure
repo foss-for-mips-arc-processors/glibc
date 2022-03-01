@@ -269,3 +269,34 @@ fi
 # arc64:64
 fi
 
+# For ARC700 ABI, generate a symbol for shlib-versions
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for arc700" >&5
+printf %s "checking for arc700... " >&6; }
+if test ${libc_cv_arc700+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#ifdef __ARC700__
+                      yes
+                     #endif
+
+_ACEOF
+if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
+  $EGREP "yes" >/dev/null 2>&1
+then :
+  libc_cv_arc700=yes
+else $as_nop
+  libc_cv_arc700=no
+fi
+rm -rf conftest*
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_arc700" >&5
+printf "%s\n" "$libc_cv_arc700" >&6; }
+if test $libc_cv_arc700 = yes; then
+  printf "%s\n" "#define HAVE_ARC700 1" >>confdefs.h
+
+fi
+

@@ -59,3 +59,14 @@ fi
 
 # arc64:64
 fi
+
+# For ARC700 ABI, generate a symbol for shlib-versions
+AC_CACHE_CHECK([for arc700],
+  [libc_cv_arc700],
+  [AC_EGREP_CPP(yes,[#ifdef __ARC700__
+                      yes
+                     #endif
+  ], libc_cv_arc700=yes, libc_cv_arc700=no)])
+if test $libc_cv_arc700 = yes; then
+  AC_DEFINE(HAVE_ARC700)
+fi
