@@ -1,5 +1,12 @@
 DEFAULT                 GLIBC_2.32
 
+%ifdef HAVE_ARC700
+%ifdef HAVE_ARC_BE
+ld=ld-linux-arc700eb.so.2
+%else
+ld=ld-linux-arc700.so.2
+%endif
+%else
 %ifdef HAVE_ARC32
 ld=ld-linux-arc32.so.2
 %else
@@ -10,6 +17,7 @@ ld=ld-linux-arc64.so.2
 ld=ld-linux-arceb.so.2
 %else
 ld=ld-linux-arc.so.2
+%endif
 %endif
 %endif
 %endif
