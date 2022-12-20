@@ -3,6 +3,11 @@ arc*)
   base_machine=arc
   machine=arc
 
+  isarchs=`$CC $CFLAGS $CPPFLAGS -E -dM -xc /dev/null | grep __ARCHS__| wc -l`
+  if test "$isarchs" != "0"; then
+    machine=arc/archs
+  fi
+
   gccfloat=`$CC $CFLAGS $CPPFLAGS -E -dM -xc /dev/null | grep __ARC_FPU_| wc -l`
   if test "$gccfloat" != "0"; then
     with_fp_cond=1
