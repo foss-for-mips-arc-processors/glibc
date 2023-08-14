@@ -205,6 +205,7 @@ float: 7
 
 Function: "hypot":
 double: 1
+float: 1
 
 Function: "j0":
 double: 2
