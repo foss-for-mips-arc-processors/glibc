@@ -268,8 +268,8 @@ printf %s "checking for arc700... " >&6; }
 if test ${libc_cv_arc700+y}
 then :
   printf %s "(cached) " >&6
-else $as_nop
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+else case e in #(
+  e) cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 #ifdef __ARC700__
                       yes
@@ -277,14 +277,16 @@ else $as_nop
 
 _ACEOF
 if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
-  $EGREP "yes" >/dev/null 2>&1
+  $EGREP_TRADITIONAL "yes" >/dev/null 2>&1
 then :
   libc_cv_arc700=yes
-else $as_nop
-  libc_cv_arc700=no
+else case e in #(
+  e) libc_cv_arc700=no ;;
+esac
 fi
 rm -rf conftest*
-
+ ;;
+esac
 fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_arc700" >&5
 printf "%s\n" "$libc_cv_arc700" >&6; }
