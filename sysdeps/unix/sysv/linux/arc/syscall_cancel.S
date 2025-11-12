@@ -48,7 +48,11 @@ __syscall_cancel_arch_end:
 	j_s	[blink]
 
 	.align 4
+#ifdef __ARC64_ARCH64__
+1:	push	blink
+#else
 1:	push_s	blink
+#endif
 	cfi_def_cfa_offset (4)
 	cfi_offset (31, -4)
 	bl	@__syscall_do_cancel
