@@ -326,7 +326,7 @@ typedef struct
 #define EM_CLOUDSHIELD	192	/* CloudShield */
 #define EM_COREA_1ST	193	/* KIPO-KAIST Core-A 1st gen. */
 #define EM_COREA_2ND	194	/* KIPO-KAIST Core-A 2nd gen. */
-#define EM_ARCV2	195	/* Synopsys ARCv2 ISA.  */
+#define EM_ARCV2	195	/* ARCv2 ISA.  */
 #define EM_OPEN8	196	/* Open8 RISC */
 #define EM_RL78		197	/* Renesas RL78 */
 #define EM_VIDEOCORE5	198	/* Broadcom VideoCore V */
@@ -358,8 +358,8 @@ typedef struct
 
 #define EM_BPF		247	/* Linux BPF -- in-kernel virtual machine */
 #define EM_CSKY		252     /* C-SKY */
-#define EM_ARCV3	253     /* Synopsys ARCv3 64-bit ISA */
-#define EM_ARCV3_32	255     /* Synopsys ARCv3 32-bit ISA */
+#define EM_ARCV3	253     /* ARCv3 64-bit ISA */
+#define EM_ARCV3_32	255     /* ARCv3 32-bit ISA */
 #define EM_LOONGARCH	258	/* LoongArch */
 
 #define EM_NUM		259
