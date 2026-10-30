@@ -62,6 +62,8 @@ struct riscv_hwprobe {
 
 #endif /* RISCV_HWPROBE_KEY_MVENDORID */
 
+#define RISCV_I8500_MARCHID_VALUE 0x8000000000000101
+
 __BEGIN_DECLS
 
 #if defined __cplusplus || !__GNUC_PREREQ (2, 7)

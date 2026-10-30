@@ -1,6 +1,7 @@
 ifeq ($(subdir),string)
 sysdep_routines += \
   memcpy \
+  memcpy-mips-riscv \
   memcpy-generic \
   memcpy_noalignment \
   # sysdep_routines
