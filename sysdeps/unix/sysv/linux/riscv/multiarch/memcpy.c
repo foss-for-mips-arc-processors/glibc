@@ -30,6 +30,7 @@
 
 extern __typeof (__redirect_memcpy) __libc_memcpy;
 
+extern __typeof (__redirect_memcpy) __memcpy_mips_riscv attribute_hidden;
 extern __typeof (__redirect_memcpy) __memcpy_generic attribute_hidden;
 extern __typeof (__redirect_memcpy) __memcpy_noalignment attribute_hidden;
 
@@ -37,7 +38,11 @@ static inline __typeof (__redirect_memcpy) *
 select_memcpy_ifunc (uint64_t dl_hwcap, __riscv_hwprobe_t hwprobe_func)
 {
   unsigned long long int v;
-  if (__riscv_hwprobe_one (hwprobe_func, RISCV_HWPROBE_KEY_CPUPERF_0, &v) == 0
+  if (__riscv_hwprobe_one (hwprobe_func, RISCV_HWPROBE_KEY_MARCHID, &v) == 0
+    && (v == RISCV_I8500_MARCHID_VALUE))
+    return __memcpy_mips_riscv;
+  else if (__riscv_hwprobe_one (hwprobe_func,
+      RISCV_HWPROBE_KEY_CPUPERF_0, &v) == 0
       && (v & RISCV_HWPROBE_MISALIGNED_MASK) == RISCV_HWPROBE_MISALIGNED_FAST)
     return __memcpy_noalignment;
 
@@ -50,7 +55,7 @@ riscv_libc_ifunc (__libc_memcpy, select_memcpy_ifunc);
 strong_alias (__libc_memcpy, memcpy);
 # ifdef SHARED
 __hidden_ver1 (memcpy, __GI_memcpy, __redirect_memcpy)
-  __attribute__ ((visibility ("hidden"))) __attribute_copy__ (memcpy);
+__attribute__ ((visibility ("hidden"))) __attribute_copy__ (memcpy);
 # endif
 #else
 # include <string/memcpy.c>
